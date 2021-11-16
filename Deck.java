@@ -4,6 +4,20 @@ import java.util.ListIterator;
 
 public class Deck extends CardContainer{
 	
+	static Deck instance;
+	
+	private Deck() {
+		
+		
+	}
+	
+	public static Deck getInstance() {
+		if (instance==null) {
+			instance= new Deck();
+		}
+		return instance;
+	}
+	
 	public void init() { //##a changer quand les cartes seront faites## 
 		for (int i = 0; i < 12; i++) { 
 			 this.addCard(new Card("carte_"+i));

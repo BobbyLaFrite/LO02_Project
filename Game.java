@@ -13,7 +13,7 @@ public class Game {
 		Scanner scanner = new Scanner(System.in);
 		int userInput;
 		
-		this.deck = new Deck();
+		this.deck = Deck.getInstance();
 		
 		System.out.println("Nombre de joueurs total?");  		//##temporaire##
 		userInput = scanner.nextInt();   						//##temporaire##

@@ -22,6 +22,10 @@ public class Player {
 		this.controlable=false; 				//## temporaire, sert a  differencier les joueurs des ia##
 	}
 	
+	public String getName() {
+		return this.name;
+	}
+	
 	public Hand getHand() {
 		return this.hand;
 	}

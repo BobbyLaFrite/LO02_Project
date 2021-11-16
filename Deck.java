@@ -1,7 +1,7 @@
 package projetLO02;
 
 import java.util.ListIterator;
-
+import cards.*;
 public class Deck extends CardContainer{
 	
 	static Deck instance;
@@ -20,7 +20,7 @@ public class Deck extends CardContainer{
 	
 	public void init() { //##a changer quand les cartes seront faites## 
 		for (int i = 0; i < 12; i++) { 
-			 this.addCard(new Card("carte_"+i));
+			 this.addCard(new AngryMob()); //##on remplit le deck d'une meme carte pour l'instant
 		 }
 	}
 	

@@ -1,10 +1,42 @@
 package projetLO02;
 
+import java.util.ListIterator;
+import java.util.Scanner;
+
 public class Card {
-	public String name;
+	private String name;
 	
 	public Card(String name) {
 		this.name=name;
+		
+	}
+	
+	
+	
+	protected Player chooseTarget() {
+		Scanner scanner = new Scanner(System.in);
+		String userInput;
+		Player target = null;
+		Player actuPlayer;
+		while (target == null) {
+			
+			System.out.println("Donnez le nom de la cible");
+			System.out.println(PlayerGroup.getInstance(0).getAllName());
+			userInput = scanner.nextLine(); 
+			
+			ListIterator<Player> playerIt = PlayerGroup.getInstance(0).getIterator();// ## pas très propre, on est obligé de mettre un int en arg##
+			while (playerIt.hasNext() && target == null) {
+				actuPlayer = playerIt.next();
+				if (actuPlayer.getName()==userInput) {
+					target=actuPlayer;
+				}
+			}
+			if (target == null) {
+				System.out.println("Le nom "+userInput+" n'est pas valide");
+			}
+			
+		}
+		return target;
 		
 	}
 }

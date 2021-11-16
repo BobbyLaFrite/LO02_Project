@@ -25,6 +25,18 @@ public class PlayerGroup {
 		return instance;
 	}
 	
+	public String getAllName() {
+		String content = "";
+		ListIterator<Player> playerIT = this.getIterator();
+		while (playerIT.hasNext()) {
+			content+=playerIT.next().getName();
+			if (playerIT.hasNext()){
+				content+="\n";
+			}
+		}
+		return content;
+	}
+	
 	public int getNumberPlayer() {
 		return this.numberPlayer;
 	}

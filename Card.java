@@ -11,9 +11,13 @@ public class Card {
 		
 	}
 	
+	public String getName() {
+		return this.name;
+	}
 	
 	
-	protected Player chooseTarget() {
+	
+	protected Player chooseTarget() { //##classe ~test (comportera bcp de modifs) notamment on peut choisir tout les joueurs et seulement par nom
 		Scanner scanner = new Scanner(System.in);
 		String userInput;
 		Player target = null;

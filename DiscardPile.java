@@ -16,4 +16,8 @@ public class DiscardPile extends CardContainer{
 		return instance;
 	}
 	
+	public void init() {
+		this.cardList.clear();
+	}
+	
 }

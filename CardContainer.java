@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Collections;
 import java.util.Collections;
-public class CardContainer {
+public abstract class CardContainer {
 	
-	private List<Card> cardList;
+	protected List<Card> cardList;
+	
+	
 	
 	public CardContainer() {
 		 this.cardList =  new ArrayList<Card>() ;
@@ -25,9 +27,7 @@ public class CardContainer {
 		this.cardList.clear();
 	}
 	
-	public void init() {
-		this.cardList.clear();
-	}
+	public abstract void init();
 	
 	public Card getCardByIndex(int index) {
 		return this.cardList.get(index);
@@ -75,7 +75,7 @@ public class CardContainer {
 		String content = "["; 		//content correspond au string qu'on retourne à la fin. On lui ajoute tout les nomsde carte
 		ListIterator<Card> it = this.cardList.listIterator() ; //on crée un iterateur pour parcourir toute les cartes
 		 while(it.hasNext()) {
-			  content+= it.next().name ;
+			  content+= it.next().getName() ;
 			  if (it.hasNext()) {
 				  content+=" , ";
 			  }

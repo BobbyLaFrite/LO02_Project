@@ -39,8 +39,8 @@ public class PlayerGroup {
 		Player actuPlayer;
 		while (it.hasNext()) {
 			actuPlayer=it.next();
-			actuPlayer.hand.init();
-			actuPlayer.board.init();
+			actuPlayer.getHand().init();
+			actuPlayer.getBoard().init();
 		}
 	}
 	

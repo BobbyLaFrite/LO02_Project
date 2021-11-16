@@ -10,8 +10,16 @@ public class Role {
 	}
 	
 	
-	public void choseRole(String chosenRole) {
+	public void setRole(String chosenRole) {
 		this.chosenRole=chosenRole;
+	}
+	
+	public String getRole() {
+		return this.chosenRole;
+	}
+	
+	public boolean getIsRevealed() {
+		return this.isRevealed;
 	}
 	
 }

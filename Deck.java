@@ -15,7 +15,7 @@ public class Deck extends CardContainer{
 		ListIterator<Player> playerIterator = group.getIterator();
 		while(playerIterator.hasNext()) {
 			
-			this.giveRandomCard(playerIterator.next().hand,cardNumber);
+			this.giveRandomCard(playerIterator.next().getHand(),cardNumber);
 		 }
 		
 	}

@@ -1,23 +1,34 @@
 package projetLO02;
 
 import java.util.Scanner;
+import java.util.ListIterator;
 import java.util.Random;
 
 public class Player {
-	Hand hand;
-	Board board;
+	private Hand hand;
+	private Board board;
 	int playerIndex;
-	Role role;
+	private Role role;
+	private String name;
 	boolean controlable; //##temporaire##
+	static int nbrJoueur = 0; 					//## temporaire, pour nommer les joueurs##
 	
 	public Player() {
+		this.name = "joueur_"+Player.nbrJoueur;	//## temporaire, pour nommer les joueurs##
+		Player.nbrJoueur+=1;					//## temporaire, pour nommer les joueurs##
 		this.hand=new Hand();
 		this.board=new Board();
 		this.role = new Role();
-		this.controlable=false; //## temporaire, sert a  differencier les joueurs des ia##
+		this.controlable=false; 				//## temporaire, sert a  differencier les joueurs des ia##
 	}
 	
+	public Hand getHand() {
+		return this.hand;
+	}
 	
+	public Board getBoard() {
+		return this.board;
+	}
 	
 	public void chooseRole() {
 		
@@ -27,13 +38,20 @@ public class Player {
 			
 			System.out.println("Chose your role Witch/Villager");
 			userInput = scanner.nextLine(); 
-			this.role.choseRole(userInput);
+			this.role.setRole(userInput);
 		} else {
-			this.role.choseRole((String) (new Random().nextBoolean() ? "Witch" : "Villager"));
+			this.role.setRole((String) (new Random().nextBoolean() ? "Witch" : "Villager"));
 			
 		}
 		
 	}
+	
+	public String toString () { 	//Retourne un string sous forme "nom du joueur, role, status, nombre de carde dans la main 
+		String content = this.name + " , role : " + this.role.getRole() + " , est révélé : " + String.valueOf(this.role.getIsRevealed()) + " , nombre de carte : " + String.valueOf(this.hand.getNumberCard()); 		
+		return content;
+	}
+
+
 	
 	
 }

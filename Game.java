@@ -47,9 +47,17 @@ public class Game {
 			this.deck.giveCard(0,this.discardPile);
 		}
 		
-		for (Player player : this.playerGroup.ge) { 		      
-	           System.out.println(num); 		
-	      }
+		ListIterator<Player> playerIt = this.playerGroup.getIterator();
+		
+		while (playerIt.hasNext()) {
+			playerIt.next().chooseRole();
+		}
+		
+		
+		playerIt = this.playerGroup.getIterator();
+		while (playerIt.hasNext()) {
+			System.out.println(playerIt.next());
+		}
 		
 		
 	}

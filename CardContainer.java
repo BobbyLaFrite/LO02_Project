@@ -16,6 +16,10 @@ public class CardContainer {
 		return this.cardList.isEmpty();
 	}
 	
+	public int getNumberCard() {
+		return this.cardList.size();
+	}
+	
 	public void clear() {
 		
 		this.cardList.clear();

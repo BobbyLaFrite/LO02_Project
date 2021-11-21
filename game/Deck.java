@@ -52,14 +52,10 @@ public class Deck extends CardContainer{
 		System.out.println("deck  a : " + a);
 		System.out.println("deck  b : " + b);
 		a.giveCard(a.getCardByIndex(0), b);
-		System.out.println("\napr�s �change\n");
+		System.out.println("\naprès échange\n");
 		System.out.println("deck  a : " + a);
 		System.out.println("deck  b : " + b);
-		
-		System.out.println("\nM�lange de b\n");
-		
-		b.shuffle();
-		System.out.println("deck  b : " + b);
+		//on a plus besoin de mélanger le deck, on donnera une carte de manière aléatoire ce qui reviens au même
 		
 		
 	}

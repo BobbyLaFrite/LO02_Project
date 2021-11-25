@@ -1,21 +1,18 @@
 package game;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Collections;
-import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import cards.Card;
 
 
 
 public abstract class CardContainer {
 	
-	protected List<Card> cardList;
+	protected LinkedHashSet<Card> cardList;
 	
 	
 	
 	public CardContainer() {
-		 this.cardList =  new ArrayList<Card>() ;
+		 this.cardList =  new LinkedHashSet<Card>();
 	}
 	
 	public boolean isEmpty() {
@@ -33,8 +30,15 @@ public abstract class CardContainer {
 	
 	public abstract void init();
 	
-	public Card getCardByIndex(int index) {
-		return this.cardList.get(index);
+	public Card getCardByIndex(int index) {//parcourt le linkedhashset pour renvoyer le nième élément
+		Iterator<Card> it = cardList.iterator();
+		Card currentCard=null;
+		for (int i = 0;i<index+1;i++) {
+			if (it.hasNext()) {
+				currentCard=it.next();
+			}
+		}
+		return currentCard;
 	}
 	
 	public void addCard(Card cardToAdd) {
@@ -45,16 +49,13 @@ public abstract class CardContainer {
 		this.cardList.remove(cardToRemove);
 	}
 	
-	public void removeCard(int indexCardToRemove) {//surcharge avec seulement l'index comme référence
+	public void removeCard(int indexCardToRemove) {//surcharge avec seulement l'index comme reference
 		this.removeCard(this.getCardByIndex(indexCardToRemove));
 	}
 	
-	public void shuffle() {
-		Collections.shuffle(this.cardList);
-	}
 	
-	public void giveCard(Card cardToGive ,CardContainer containerToGive) { //fonction qui supprime une carte pour l'ajouter à un autre container. 
-			//##Aucune sécurité, si carte existe pas##
+	public void giveCard(Card cardToGive ,CardContainer containerToGive) { //fonction qui supprime une carte pour l'ajouter a un autre container. 
+			//##Aucune securite, si carte existe pas##
 		this.removeCard(cardToGive);
 		containerToGive.addCard(cardToGive);
 	}
@@ -64,23 +65,23 @@ public abstract class CardContainer {
 		this.giveCard(this.getCardByIndex(indexCardToGive) , containerToGive);
 	}
 	
-	public void giveRandomCard(CardContainer containerToGive,int cardNumber) { // donner une carte aléatoire, utile pour la distribution notament
+	public void giveRandomCard(CardContainer containerToGive,int cardNumber) { // donner des cartes aleatoirement, utile pour la distribution notament
 		 for (int i = 0; i < cardNumber; i++) { 
 			 int index = (int)(Math.random() * this.cardList.size());
 			 this.giveCard(index, containerToGive);
 		 	} 
 	}
 	
-	public void giveRandomCard(CardContainer containerToGive) { //surcharge de la méthode si on veut donner qu'une carte
+	public void giveRandomCard(CardContainer containerToGive) { //surcharge de la methode si on veut donner qu'une carte
 		this.giveRandomCard(containerToGive,1);
 	}
 	
 	public String toString () { 	//Retourne un string sous forme [nomde carte 1, nom de carte 2 ... ]
-		String content = "["; 		//content correspond au string qu'on retourne à la fin. On lui ajoute tout les nomsde carte
-		ListIterator<Card> it = this.cardList.listIterator() ; //on crée un iterateur pour parcourir toute les cartes
-		 while(it.hasNext()) {
-			  content+= it.next().getName() ;
+		String content = "["; 		//content correspond au string qu'on retourne a la fin. On lui ajoute tout les nomsde carte
+		Iterator<Card> it = cardList.iterator(); //on cree un iterateur pour parcourir toute les cartes
+		 while(it.hasNext()) {  
 			  if (it.hasNext()) {
+				  content+= it.next().getName() ;
 				  content+=" , ";
 			  }
 		 }

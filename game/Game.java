@@ -1,8 +1,10 @@
 package game;
 
+import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Scanner;
 import players.PlayerGroup;
+import players.NextPlayer;
 import players.Player;
 
 public class Game {
@@ -22,11 +24,12 @@ public class Game {
 		this.playerGroup = PlayerGroup.getInstance(userInput); 	//##temporaire##
 		System.out.println("Nombre de joueurs controllable?"); 	//##temporaire##
 		userInput = scanner.nextInt();  						//##temporaire##
-		
-		ListIterator<Player> it = this.playerGroup.getIterator();
+		Iterator<Player> it = this.playerGroup.getIterator();
 		
 		for (int i=0; i<userInput ; i++) {
 			it.next().setControlable(true);
+			
+
 		}
 		
 		this.discardPile = DiscardPile.getInstance();
@@ -41,25 +44,48 @@ public class Game {
 	}
 	
 	public void playRound() {
+		
+		Scanner scanner = new Scanner(System.in);
+		String userInput;
+		boolean keepPlaying = true;
+		NextPlayer cible;
+		
 		this.deck.init();
 		this.discardPile.init();
+
 		this.playerGroup.initAllPlayer();
 		this.deck.distribute(this.playerGroup, (int) 12/this.playerGroup.getNumberPlayer());
 		while (this.deck.isEmpty()==false) {
 			this.deck.giveCard(0,this.discardPile);
 		}
 		
-		ListIterator<Player> playerIt = this.playerGroup.getIterator();
+		Iterator<Player> playerIt = this.playerGroup.getIterator();
 		
 		while (playerIt.hasNext()) {
 			playerIt.next().chooseRole();
 		}
 		
-		
-		playerIt = this.playerGroup.getIterator();
-		while (playerIt.hasNext()) {
-			System.out.println(playerIt.next());
+		Player actuPlayer = this.playerGroup.getRandomPlayer();
+		playerIt = this.playerGroup.getIterator(); 	//juste un affichage
+		while (playerIt.hasNext()) {				//juste un affichage
+			System.out.println(playerIt.next());	//juste un affichage
 		}
+		while (keepPlaying) {
+			cible=actuPlayer.play(); 			//On fait jouer le joueur et on récupère le nextplayer ##rajouter en paramètre si il est accusé
+			actuPlayer=cible.getTarget();
+			
+			System.out.println("Stopper? Y/N"); 	//Simple test pour sortir du jeu car pour l'instant ça continue à l'infini (car pas d'accusation)
+
+			userInput = scanner.nextLine(); 
+			
+			if(userInput.equalsIgnoreCase("Y")) {
+				keepPlaying=false;
+			}
+		}
+		
+
+		
+						
 		
 		
 	}

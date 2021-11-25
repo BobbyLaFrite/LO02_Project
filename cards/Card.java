@@ -4,14 +4,22 @@ import java.util.ListIterator;
 import java.util.Scanner;
 import players.Player;
 import players.PlayerGroup;
+import players.NextPlayer;
+import players.Player;
+import players.NextPlayer;
+import players.Player;
+import players.NextPlayer;
+import players.Player;
 
-public class Card {
+public abstract class Card {
 	private String name;
 	
 	public Card(String name) {
 		this.name=name;
 		
 	}
+	
+	public abstract NextPlayer activate();
 	
 	public String getName() {
 		return this.name;

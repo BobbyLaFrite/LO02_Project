@@ -25,9 +25,9 @@ public class Game {
 		
 		ListIterator<Player> it = this.playerGroup.getIterator();
 		
-		for (int i=0; i<userInput ; i++) {
-			it.next().setControlable(true);
-		}
+//		for (int i=0; i<userInput ; i++) {
+//			it.next().setControlable(true);
+//		}
 		
 		this.discardPile = DiscardPile.getInstance();
 	}
@@ -52,7 +52,7 @@ public class Game {
 		ListIterator<Player> playerIt = this.playerGroup.getIterator();
 		
 		while (playerIt.hasNext()) {
-			playerIt.next().chooseRole();
+			playerIt.next().getStrategie().chooseRole();
 		}
 		
 		

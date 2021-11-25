@@ -8,7 +8,9 @@ public class PlayerGroup {
 	private List<Player> playerList;
 	private int numberPlayer;
 	private static PlayerGroup instance;
-	
+	private List<Player> exceptionsAccusationList;
+	private List<Player> exceptionCardTarget;
+
 	private PlayerGroup(int numberPlayer) { //##Pour l'instant on ne donne pas de type au joueurs, a voir plus tard##
 		this.numberPlayer = numberPlayer;
 		this.playerList =  new ArrayList<Player>() ;
@@ -59,5 +61,22 @@ public class PlayerGroup {
 	public Player getPlayer(int index) {
 		return this.playerList.get(index);	
 	}
+	
+	public int getUnrevealedPlayerNumber() {
+		return exceptionsAccusationList.size();
+	}
+
+	public List<Player> getTargets(String typeOfTarget,Player exception) {
+		List<Player> targets = playerList;
+		targets.remove(exception);
+		if (typeOfTarget == "accusation") {
+			targets.removeAll(exceptionsAccusationList);
+		}
+		else if (typeOfTarget == "card") {
+			targets.removeAll(exceptionCardTarget);
+		} 
+		return targets;
+	}
+
 
 }

@@ -1,6 +1,9 @@
 package players;
 
 import java.util.Scanner;
+
+import cards.Card;
+
 import java.util.ListIterator;
 import java.util.Random;
 import game.Board;
@@ -12,7 +15,7 @@ public class Player {
 	int playerIndex;
 	private Role role;
 	private String name;
-	boolean controlable; //##temporaire##
+	private Strategie strategie;
 
 	static int nbrJoueur = 0; 					//## temporaire, pour nommer les joueurs##
 	
@@ -22,11 +25,6 @@ public class Player {
 		this.hand=new Hand();
 		this.board=new Board();
 		this.role = new Role();
-		this.controlable=false; 				//## temporaire, sert a  differencier les joueurs des ia##
-	}
-	
-	public void setControlable(boolean controlable) {
-		this.controlable = controlable;
 	}
 	
 	public String getName() {
@@ -41,25 +39,39 @@ public class Player {
 		return this.board;
 	}
 	
-	public void chooseRole() {
-		
-		if (this.controlable) {
-			Scanner scanner = new Scanner(System.in);
-			String userInput;
-			
-			System.out.println("Chose your role Witch/Villager");
-			userInput = scanner.nextLine(); 
-			this.role.setRole(userInput);
-		} else {
-			this.role.setRole((String) (new Random().nextBoolean() ? "Witch" : "Villager"));
-			
-		}
-		
+	public Role getRole() {
+		return this.role;
 	}
+	
+	public Strategie getStrategie() {
+		return this.strategie;
+	}
+	
 	
 	public String toString () { 	//Retourne un string sous forme "nom du joueur, role, status, nombre de carde dans la main 
 		String content = this.name + " , role : " + this.role.getRole() + " , est révélé : " + String.valueOf(this.role.getIsRevealed()) + " , nombre de carte : " + String.valueOf(this.hand.getNumberCard()); 		
 		return content;
+	}
+	
+	public Player revealRole(){
+		//révéler son role permet de connaitre le prochain joueur
+		//A IMPLEMENTER
+		return null;
+	}
+	
+	public NextPlayer playCard(Card card,boolean isAccused) {
+		//A IMPLEMENTER
+		//la signature a été modifiée pour ajouter une cible
+		return null;
+	}
+	
+	public Player accuse() {
+		//A IMPLEMENTER
+		//cette méthode à changé de classe, elle est passée de stratégie Player
+		//dans la stratégie le joueur (réel ou IA) va choisir d'accuser et qui accuser, c'est la meme chose pour tous les joueurs
+		//et cela ne dépends pas de leurs type
+		//je sais plus comment cette méthode doit fonctionner, comment cibler un joueur ?
+		return null;
 	}
 
 

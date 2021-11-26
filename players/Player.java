@@ -53,8 +53,14 @@ public class Player {
 		return content;
 	}
 	
-	public Player revealRole(){
-		//révéler son role permet de connaitre le prochain joueur
+	public NextPlayer Play(boolean isAccused) {
+		//A IMPLEMENTER
+		return null;
+	}
+	
+	public NextPlayer revealRole(){
+		//révéler son role permet de connaitre le prochain joueur 
+		//donc changement de signature
 		//A IMPLEMENTER
 		return null;
 	}
@@ -70,7 +76,7 @@ public class Player {
 		//cette méthode à changé de classe, elle est passée de stratégie Player
 		//dans la stratégie le joueur (réel ou IA) va choisir d'accuser et qui accuser, c'est la meme chose pour tous les joueurs
 		//et cela ne dépends pas de leurs type
-		//je sais plus comment cette méthode doit fonctionner, comment cibler un joueur ?
+		//je pense que cette méthode n'est pas utile finalement
 		return null;
 	}
 

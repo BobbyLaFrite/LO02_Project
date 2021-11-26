@@ -16,34 +16,39 @@ public class HumanPlayer implements Strategie{
 	}
 	
 	@Override
-	public void play(boolean isAccused) {
+	public NextPlayer play(boolean isAccused) {
 		//interface terminal
-		if (isAccused) {
+		if (isAccused) {//ETRE ACCUSE
 			System.out.print("Voulez-vous réveler votre role ou jouer une carte ?\nY pour le role N pour la carte");
 			userInput = inScanner.nextLine();
-			if (userInput=="Y") {
-				assignedPlayer.revealRole();
+			if (userInput=="Y") {//SE REVELER
+				return assignedPlayer.revealRole();
 			}
-			else if (userInput=="N") {
+			else if (userInput=="N") {//JOUER UNE CARTE
 				Card cardToBePlayed=chooseCard();
-				assignedPlayer.playCard(cardToBePlayed,isAccused);
+				NextPlayer nextPlayer = assignedPlayer.playCard(cardToBePlayed,true);
+				return nextPlayer;
 			}
 		}
-		else {
+		else {//NE PAS ETRE ACCUSE
 			System.out.print("Voulez-vous accuser ou jouer une carte ?\nY pour l'accusation N pour la carte");
 			userInput = inScanner.nextLine();
-			if (userInput=="Y") {
+			if (userInput=="Y") {//ACCUSER
 				
-				//List<Player> accusablePlayers=playerGroup.getTargets("accusation",assignedPlayer);
-				assignedPlayer.accuse();
+				List<Player> accusablePlayers=playerGroup.getTargets("accusation",assignedPlayer);
+				Player accusedPlayer=chooseTarget(accusablePlayers);
+				return new NextPlayer(accusedPlayer, true);
 				
 			}
-			else if (userInput=="N") {
+			else if (userInput=="N") {//JOUER UNE CARTE
 				Card cardToBePlayed=chooseCard();
 				//List<Player> accusablePlayers=playerGroup.getTargets("card",assignedPlayer);
-				assignedPlayer.playCard(cardToBePlayed,isAccused);
+				
+				NextPlayer nextPlayer = assignedPlayer.playCard(cardToBePlayed,false);
+				return nextPlayer;
 			}
 		}
+		return null;
 	}
 
 	@Override
@@ -56,7 +61,10 @@ public class HumanPlayer implements Strategie{
 
 	@Override
 	public Card chooseCard() {
-		// TODO Auto-generated method stub
+		Hand cards = assignedPlayer.getHand();
+		System.out.println("Choisissez une carte parmis les suivantes : "+cards.toString());
+		//on récupère le nom de la carte
+		
 		return null;
 	}
 

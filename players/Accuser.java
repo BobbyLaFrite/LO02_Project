@@ -22,7 +22,7 @@ public class Accuser implements Strategie {
 			return assignedPlayer.revealRole();
 		}
 		else {
-			List<Player> accusablePlayers=playerGroup.getTargets("accusation",assignedPlayer);
+			List<Player> accusablePlayers=playerGroup.getTarget("accusation",assignedPlayer);
 			int taille = accusablePlayers.size();
 			
 			Player accusedPlayer = accusablePlayers.get(randomNumber.nextInt(taille));
@@ -36,10 +36,10 @@ public class Accuser implements Strategie {
 	}
 
 	@Override
-	public Card chooseCard() {
+	public Card chooseCard(boolean isAccused) {
 		// TODO Auto-generated method stub
 		//joue toujours la première
-		return assignedPlayer.getHand().getCardByIndex(0);
+		return assignedPlayer.getHand().getPlayableCard(this.assignedPlayer,isAccused).getCardByIndex(0);
 	}
 
 	@Override

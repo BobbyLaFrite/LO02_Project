@@ -1,45 +1,68 @@
 package cards;
 
-import java.util.ListIterator;
-import java.util.Scanner;
+import java.util.List;
+
+import players.NextPlayer;
 import players.Player;
 import players.PlayerGroup;
 
-public class Card {
+public abstract class Card {
 	private String name;
+	private String witchEffect;
+	private String huntEffect;
 	
-	public Card(String name) {
+	public Card(String name,String witchEffect,String huntEffect) {
 		this.name=name;
+		this.witchEffect=witchEffect;
+		this.huntEffect=huntEffect;
 	}
 	
 	public String getName() {
 		return this.name;
 	}
 	
-	protected Player chooseTarget() { //##classe ~test (comportera bcp de modifs) notamment on peut choisir tout les joueurs et seulement par nom
-		Scanner scanner = new Scanner(System.in);
-		String userInput;
+	protected Player chooseTarget(String typeOfTarget,Player actuPlayer) { //##classe ~test (comportera bcp de modifs) notamment on peut choisir tout les joueurs et seulement par nom
 		Player target = null;
-		Player actuPlayer;
-		while (target == null) {
-			
-			System.out.println("Donnez le nom de la cible");
-			System.out.println(PlayerGroup.getInstance(0).getAllName());
-			userInput = scanner.nextLine(); 
-			
-			ListIterator<Player> playerIt = PlayerGroup.getInstance(0).getIterator();// ## pas très propre, on est obligé de mettre un int en arg##
-			while (playerIt.hasNext() && target == null) {
-				actuPlayer = playerIt.next();
-				if (actuPlayer.getName()==userInput) {
-					target=actuPlayer;
-				}
-			}
-			if (target == null) {
-				System.out.println("Le nom "+userInput+" n'est pas valide");
-			}
-			
-		}
+		List<Player> validTarget = PlayerGroup.getInstance(0).getTarget(typeOfTarget, actuPlayer);
+		target=actuPlayer.getStrategie().chooseTarget(validTarget);
+		System.out.println("####"+PlayerGroup.getInstance(0).playerListToString(validTarget));
+		System.out.println("Entre "+PlayerGroup.getInstance(0).playerListToString(validTarget)+", "+actuPlayer.getName()+" a choisi "+target.getName());
 		return target;
 		
 	}
+	
+	public NextPlayer activate(Player actuPlayer,boolean isWitchEffect) {
+		NextPlayer nextPlayer;
+		this.writeCard(isWitchEffect);
+		if (isWitchEffect) {
+			nextPlayer=this.activateWitch(actuPlayer);
+		}else {
+			nextPlayer=this.activateHunt(actuPlayer);
+		}
+		
+		return nextPlayer;
+	}
+	
+	public abstract NextPlayer activateWitch(Player actuPlayer);
+	
+	public abstract NextPlayer activateHunt(Player actuPlayer);
+	
+	public abstract boolean isPlayable(Player actuPlayer,boolean isAccused);
+	
+	public NextPlayer takeTurn(Player actuPlayer) {
+		System.out.println(actuPlayer.getName()+" prened le tour !");
+		return new NextPlayer(actuPlayer,false);
+	}
+	
+	public void writeCard(boolean isWitchEffect) {
+		
+		System.out.println("\n"+this.getName()+"\n");
+		if (isWitchEffect) {
+			System.out.println(this.witchEffect);
+		}else {
+			System.out.println(this.huntEffect);
+		}
+
+	}
+	
 }

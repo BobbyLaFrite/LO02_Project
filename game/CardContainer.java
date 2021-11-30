@@ -5,7 +5,7 @@ import cards.Card;
 
 
 
-public abstract class CardContainer {
+public class CardContainer {
 	
 	protected LinkedHashSet<Card> cardList;
 	
@@ -27,15 +27,25 @@ public abstract class CardContainer {
 		
 		this.cardList.clear();
 	}
-	
-	public abstract void init();
-	
+		
 	public Card getCardByIndex(int index) {//parcourt le linkedhashset pour renvoyer le nième élément
 		Iterator<Card> it = cardList.iterator();
 		Card currentCard=null;
-		for (int i = 0;i<index;i++) {
+		for (int i = 0;i<index+1;i++) {
 			if (it.hasNext()) {
 				currentCard=it.next();
+			}
+		}
+		return currentCard;
+	}
+	
+	public Card getCardByName(String name) {
+		Iterator<Card> it = cardList.iterator();
+		Card currentCard=null;
+		while (it.hasNext()) {//On continue tant que le nom ne correspond pas
+			currentCard=it.next();
+			if (currentCard.getName()==name) {
+				break;
 			}
 		}
 		return currentCard;
@@ -77,15 +87,14 @@ public abstract class CardContainer {
 	}
 	
 	public String toString () { 	//Retourne un string sous forme [nomde carte 1, nom de carte 2 ... ]
-		String content = "["; 		//content correspond au string qu'on retourne � la fin. On lui ajoute tout les nomsde carte
-		Iterator<Card> it = cardList.iterator(); //on cr�e un iterateur pour parcourir toute les cartes
-		 while(it.hasNext()) {  
-			  if (it.hasNext()) {
-				  content+= it.next().getName() ;
-				  content+=" , ";
+		String content = ""; 		//content correspond au string qu'on retourne � la fin. On lui ajoute tout les nomsde carte
+		Iterator<Card> it = this.cardList.iterator(); //on cr�e un iterateur pour parcourir toute les cartes
+		 while(it.hasNext()) { 
+			 content+= it.next().getName() ;
+			  if (it.hasNext()) {  
+				  content+=",";
 			  }
 		 }
-		 content+="]";
 		 return content;
 	}
 	

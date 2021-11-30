@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import cards.Card;
+import game.CardContainer;
 
 public class WitchStrategy implements Strategie {
 	Player assignedPlayer;
@@ -19,7 +20,7 @@ public class WitchStrategy implements Strategie {
 		// TODO Auto-generated method stub
 		if (isAccused) {
 			if ( !assignedPlayer.getHand().isEmpty()) {
-				Card cardToBePlayed = chooseCard();
+				Card cardToBePlayed = chooseCard(isAccused);
 				NextPlayer nextPlayer = assignedPlayer.playCard(cardToBePlayed, true);
 				return nextPlayer;
 			}
@@ -29,13 +30,13 @@ public class WitchStrategy implements Strategie {
 		}
 		else {
 			if ( !assignedPlayer.getHand().isEmpty() ) {
-				//play card si la main ets pas vide
-				Card cardToBePlayed = chooseCard();
+				//play card si la main est pas vide
+				Card cardToBePlayed = chooseCard(isAccused);
 				NextPlayer nextPlayer = assignedPlayer.playCard(cardToBePlayed, false);
 				return nextPlayer;
 			}
 			else {//sinon accuse un joueur aléatoirement
-				List<Player> accusablePlayers=playerGroup.getTargets("accusation",assignedPlayer);
+				List<Player> accusablePlayers=playerGroup.getTarget("accusation",assignedPlayer);
 				int taille = accusablePlayers.size();
 				
 				Player accusedPlayer = accusablePlayers.get(randomNumber.nextInt(taille));
@@ -52,11 +53,12 @@ public class WitchStrategy implements Strategie {
 	}
 
 	@Override
-	public Card chooseCard() {
+	public Card chooseCard(boolean isAccused) {
 		// TODO Auto-generated method stub
 		//play card randomly
-		int handSize = assignedPlayer.getHand().getNumberCard();
-		return assignedPlayer.getBoard().getCardByIndex(randomNumber.nextInt(handSize));
+		CardContainer playableCard=assignedPlayer.getHand().getPlayableCard(assignedPlayer, isAccused);
+		int handSize = playableCard.getNumberCard();
+		return playableCard.getCardByIndex(randomNumber.nextInt(handSize));
 	}
 
 	@Override

@@ -1,11 +1,9 @@
 package players;
 
-import java.util.Scanner;
+
+import java.util.Random;
 
 import cards.Card;
-
-import java.util.ListIterator;
-import java.util.Random;
 import game.Board;
 import game.Role;
 
@@ -16,6 +14,7 @@ public class Player {
 	private Role role;
 	private String name;
 	private Strategie strategie;
+	private int score;
 
 	static int nbrJoueur = 0; 					//## temporaire, pour nommer les joueurs##
 	
@@ -25,10 +24,23 @@ public class Player {
 		this.hand=new Hand();
 		this.board=new Board();
 		this.role = new Role();
+		this.score=0;
+	}
+	
+	public int getScore() {
+		return this.score;
+	}
+	
+	public void addScore(int val) {
+		this.score+=val;
 	}
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name=name;
 	}
 	
 	public Hand getHand() {
@@ -47,9 +59,38 @@ public class Player {
 		return this.strategie;
 	}
 	
+	public boolean getIsAlive() {
+		if (!this.getRole().getIsRevealed()||this.getRole().getRole().equalsIgnoreCase("Villager")){
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public String getStrategieAsString() {
+		return this.strategie.getClass().getSimpleName();
+	}
+	
+	public void setStrategieHuman() {
+		this.strategie = new HumanPlayer(this);//Voir comment choisir la strategie
+	}
+	
+	public void setStrategieRandom() {
+		Random rand = new Random();
+		switch (rand.nextInt(2)) { //Switch pour choisir une stratégie aléatoirement
+        	case 0: this.strategie = new WitchStrategy(this); break;
+        	case 1: this.strategie = new Accuser(this); break;
+		}
+	}
+	
+	
 	
 	public String toString () { 	//Retourne un string sous forme "nom du joueur, role, status, nombre de carde dans la main 
-		String content = this.name + " , role : " + this.role.getRole() + " , est révélé : " + String.valueOf(this.role.getIsRevealed()) + " , nombre de carte : " + String.valueOf(this.hand.getNumberCard()); 		
+		String content = this.name;
+		content+=",\t\trole : " + this.role.getRole();
+		content+=",\t\test révélé : " + String.valueOf(this.role.getIsRevealed());
+		content+=",\t\tnombre de carte : " + String.valueOf(this.hand.getNumberCard());
+		content+=",\t\tstratégie : "+this.getStrategieAsString(); 
 		return content;
 	}
 	
@@ -66,9 +107,10 @@ public class Player {
 	}
 	
 	public NextPlayer playCard(Card card,boolean isAccused) {
-		//A IMPLEMENTER
-		//la signature a été modifiée pour ajouter une cible
-		return null;
+		NextPlayer nextPlayer = null;
+		nextPlayer=card.activate(this,isAccused);
+
+		return nextPlayer;
 	}
 	
 	public Player accuse() {

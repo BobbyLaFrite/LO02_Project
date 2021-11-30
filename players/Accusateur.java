@@ -13,7 +13,7 @@ public class Accusateur implements Strategie {
 	}
 
 	@Override
-	public void play(boolean isAccused) {
+	public NextPlayer play(boolean isAccused) {
 		// TODO Auto-generated method stub
 		//il va accuser tant qu'il peut
 		if (isAccused) {
@@ -22,6 +22,8 @@ public class Accusateur implements Strategie {
 		else {
 			assignedPlayer.accuse();
 		}
+		
+		//return nextPlayer
 	}
 	@Override
 	public void chooseRole() {
@@ -30,7 +32,7 @@ public class Accusateur implements Strategie {
 	}
 
 	@Override
-	public Card chooseCard() {
+	public Card chooseCard(boolean isAccused) {
 		// TODO Auto-generated method stub
 		//joue toujours la première
 		return assignedPlayer.getHand().getCardByIndex(0);

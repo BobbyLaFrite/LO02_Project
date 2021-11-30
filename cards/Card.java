@@ -21,16 +21,16 @@ public abstract class Card {
 		return this.name;
 	}
 	
+	
 	protected Player chooseTarget(String typeOfTarget,Player actuPlayer) { //##classe ~test (comportera bcp de modifs) notamment on peut choisir tout les joueurs et seulement par nom
 		Player target = null;
 		List<Player> validTarget = PlayerGroup.getInstance(0).getTarget(typeOfTarget, actuPlayer);
 		target=actuPlayer.getStrategie().chooseTarget(validTarget);
-		System.out.println("####"+PlayerGroup.getInstance(0).playerListToString(validTarget));
 		System.out.println("Entre "+PlayerGroup.getInstance(0).playerListToString(validTarget)+", "+actuPlayer.getName()+" a choisi "+target.getName());
 		return target;
 		
 	}
-	
+	//Chaque carte se sépare en deux, la fonction activateWitch et activateHunt. Dans tout les cas en la jouant on utilise activate qui va choisir quelle partie activer.
 	public NextPlayer activate(Player actuPlayer,boolean isWitchEffect) {
 		NextPlayer nextPlayer;
 		this.writeCard(isWitchEffect);
@@ -47,13 +47,16 @@ public abstract class Card {
 	
 	public abstract NextPlayer activateHunt(Player actuPlayer);
 	
+	//La fonction isPlayable sert à voir si une carte est jouable. Par exemple elle pourrait ne pas avoir de cibles valides ou nécésiter des condtions.
 	public abstract boolean isPlayable(Player actuPlayer,boolean isAccused);
 	
+	//Le joueur actuel devient le nextPlayer
 	public NextPlayer takeTurn(Player actuPlayer) {
 		System.out.println(actuPlayer.getName()+" prened le tour !");
 		return new NextPlayer(actuPlayer,false);
 	}
 	
+	//Affiche le nom de la carte ainsi que la partie de l'effet choisi.
 	public void writeCard(boolean isWitchEffect) {
 		
 		System.out.println("\n"+this.getName()+"\n");

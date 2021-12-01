@@ -1,35 +1,48 @@
 package game;
 
 import java.util.ListIterator;
-import java.util.Scanner;
 import players.PlayerGroup;
+import players.NextPlayer;
 import players.Player;
-
 public class Game {
 
 	private static Game instance;
 	private Deck deck;
 	private PlayerGroup playerGroup;
 	private DiscardPile discardPile;
-	public Game() {
-		Scanner scanner = new Scanner(System.in);
+	private Player playingPlayer=null;
+//	private Player actuPlayer = null; JE pense qu'il faut passer le prochain joueur et l'actuel dans group player ça fait plus de sens
+//	private Player prevPlayer = null;
+
+	private Game() {
 		int userInput;
 		
 		this.deck = Deck.getInstance();
 		
-		System.out.println("Nombre de joueurs total?");  		//##temporaire##
-		userInput = scanner.nextInt();   						//##temporaire##
+		UserInterface userInterface=UserInterface.getInstance();
+		userInput=userInterface.chooseInt("Nombre de joueurs total?",3,6,false);
 		this.playerGroup = PlayerGroup.getInstance(userInput); 	//##temporaire##
-		System.out.println("Nombre de joueurs controllable?"); 	//##temporaire##
-		userInput = scanner.nextInt();  						//##temporaire##
-		
+		userInput=userInterface.chooseInt("Nombre de joueurs humain?",0,userInput,false);		
 		ListIterator<Player> it = this.playerGroup.getIterator();
 		
-		for (int i=0; i<userInput ; i++) {
-			it.next().setControlable(true);
+		Player actuPlayer;
+		for (int i=0; i<this.playerGroup.getNumberPlayer() ; i++) {
+			actuPlayer=it.next();
+			if (i<userInput) {
+				actuPlayer.setName("joueur"+String.valueOf(i+1));
+				actuPlayer.setStrategieHuman(); //Voir comment choisir la strategie
+			}
+			else {
+				actuPlayer.setStrategieRandom(); //Voir comment choisir la strategie
+				actuPlayer.setName("IA-"+String.valueOf(i+1));
+			}
 		}
 		
+		
+		
 		this.discardPile = DiscardPile.getInstance();
+		
+		
 	}
 	
 	public static Game getInstance() {
@@ -40,10 +53,27 @@ public class Game {
 		return instance;
 	}
 	
+	private boolean shouldRoundEnd() {
+		int numberHiddenPlayer=0;
+		ListIterator<Player> it = this.playerGroup.getIterator();
+		while (it.hasNext()) {
+			if (!it.next().getRole().getIsRevealed()) {//si le role n'est pas révélé
+				numberHiddenPlayer+=1;
+			}
+		}
+		if (numberHiddenPlayer>1) {
+			return false;
+		}else {
+			return true;
+		}
+	}
+	
 	public void playRound() {
+		NextPlayer nextPlayer = null;
 		this.deck.init();
 		this.discardPile.init();
 		this.playerGroup.initAllPlayer();
+		
 		this.deck.distribute(this.playerGroup, (int) 12/this.playerGroup.getNumberPlayer());
 		while (this.deck.isEmpty()==false) {
 			this.deck.giveCard(0,this.discardPile);
@@ -52,34 +82,47 @@ public class Game {
 		ListIterator<Player> playerIt = this.playerGroup.getIterator();
 		
 		while (playerIt.hasNext()) {
-			playerIt.next().chooseRole();
+			playerIt.next().getStrategie().chooseRole();
 		}
 		
 		
-		playerIt = this.playerGroup.getIterator();
-		while (playerIt.hasNext()) {
-			System.out.println(playerIt.next());
-		}
 		
+		
+		playerIt = this.playerGroup.getIterator(); //On fait jouer le premier joueur (##mettre random plus tard##)
+		nextPlayer=new NextPlayer(playerIt.next(),false);
+		while (!this.shouldRoundEnd()) {
+			
+			System.out.println(this.playerGroup);
+			
+			this.playingPlayer=nextPlayer.getTarget();
+			playerGroup.setCurrentPlayer(playingPlayer);
+			
+			
+			System.out.println("\nC'est à "+playingPlayer.getName()+" de jouer !");
+			
+			nextPlayer=this.playingPlayer.play(nextPlayer.getIsAccuded());
+			playerGroup.setPreviousPlayer(playingPlayer);
+			
+			
+			//this.prevPlayer=actuPlayer; 	//Utile notamment pour hoocked nose qui a besoin de la personne qui accuse
+			//je crois que tu t'es trompé en remplaçant prevPlayer par actuplayer
+			
+			
+		}
+				
 		
 	}
 	
-	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-		String userInput;
-		Game game=  Game.getInstance();
+	public static void main(String[] args) {	
+		Game game=Game.getInstance();
 		boolean keepPlaying = true;
+		String userInput;
 		while (keepPlaying) {
 			
 			game.playRound();
 
-			
-			System.out.println("Play another round? Y/N");
-			
-			do {
-				userInput = scanner.nextLine(); 
-			} while (!(userInput.equalsIgnoreCase("Y") ||  userInput.equalsIgnoreCase("N")));
-			
+			userInput=UserInterface.getInstance().chooseBetween("Play another round? Y/N", "Y,N", false);
+
 			if (userInput.equalsIgnoreCase("N")) {
 			keepPlaying=false;
 			}

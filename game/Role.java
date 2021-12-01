@@ -21,5 +21,8 @@ public class Role {
 	public boolean getIsRevealed() {
 		return this.isRevealed;
 	}
+	public void reveal() {
+		this.isRevealed=true;
+	}
 	
 }

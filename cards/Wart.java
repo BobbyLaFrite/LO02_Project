@@ -1,12 +1,10 @@
 package cards;
 import players.NextPlayer;
 import players.Player;
-import players.PlayerGroup;
 
 
 
 public class Wart extends Card{
-	
 	
 	public Wart() {
 		super("Wart","Take next turn.","Choose next player.");

@@ -1,6 +1,7 @@
 package game;
 
 import java.util.ListIterator;
+
 import players.PlayerGroup;
 import players.NextPlayer;
 import players.Player;
@@ -92,24 +93,42 @@ public class Game {
 		nextPlayer=new NextPlayer(playerIt.next(),false);
 		while (!this.shouldRoundEnd()) {
 			
-			System.out.println(this.playerGroup);
+			//System.out.println(this.playerGroup);
 			
 			this.playingPlayer=nextPlayer.getTarget();
-			playerGroup.setCurrentPlayer(playingPlayer);
+			this.playerGroup.setCurrentPlayer(playingPlayer);
 			
 			
-			System.out.println("\nC'est à "+playingPlayer.getName()+" de jouer !");
-			
+			System.out.println("\n-------------------------------------\nC'est \u00e0 "+playingPlayer.getName()+" de jouer !");
+			if (!playingPlayer.getStrategieAsString().equalsIgnoreCase("HumanPlayer")) {//Si le joueur est une IA, on attend un peu
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+
+				}
+			}
 			nextPlayer=this.playingPlayer.play(nextPlayer.getIsAccuded());
-			playerGroup.setPreviousPlayer(playingPlayer);
-			
-			
-			//this.prevPlayer=actuPlayer; 	//Utile notamment pour hoocked nose qui a besoin de la personne qui accuse
-			//je crois que tu t'es trompé en remplaçant prevPlayer par actuplayer
-			
+			this.playerGroup.setPreviousPlayer(playingPlayer);
 			
 		}
+		Player roundWinner=null;
+		ListIterator<Player> it = this.playerGroup.getIterator();
+		int scoreWon=0;
+		while (it.hasNext()) {
+			roundWinner=it.next();
+			if (!roundWinner.getRole().getIsRevealed()) {//si le role n'est pas révélé
+				if (roundWinner.getRole().getRole().equalsIgnoreCase("Witch")) {
+					scoreWon=2;
+				}else {
+					scoreWon=1;
+				}
+				roundWinner.addScore(scoreWon);
 				
+				break;
+			}
+		}
+		System.out.println("\n==================================\n"+roundWinner.getName()+" gagne la manche ! Il était "+roundWinner.getRole().getRole()+" et gagne donc "+scoreWon+" points.");
+		
 		
 	}
 	

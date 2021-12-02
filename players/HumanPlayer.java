@@ -22,38 +22,55 @@ public class HumanPlayer implements Strategie{
 		NextPlayer nextPlayer=null;
 		do {
 			if (isAccused) {//ETRE ACCUSE
-				System.out.println("Vous avez été accusé !");
-				System.out.println("Voulez-vous réveler votre role ou jouer une carte ?\nY pour le role N pour la carte");
-				userInput = this.inScanner.nextLine();
-				if (userInput.equalsIgnoreCase("Y")) {//SE REVELER
-					nextPlayer = this.assignedPlayer.revealRole();
-
-				}
-				else if (userInput.equalsIgnoreCase("N")) {//JOUER UNE CARTE
-					Card cardToBePlayed=this.chooseCard(isAccused);
-					if (cardToBePlayed!=null) {//peut être null si on fait exit
-						nextPlayer = this.assignedPlayer.playCard(cardToBePlayed,true);
+				System.out.println("Vous avez ete accuse !");
+				do { //on boucle tant que le choix n'est qu'un affichage
+					//this.userInput=UserInterface.getInstance().chooseBetween("Voulez-vous reveler votre role (reveal) ou jouer une carte (play). (show hand/show player)", "reveal,play,show hand,show player", false);
+					if (chooseToReveal()) {//SE REVELER //old code : userInput.equalsIgnoreCase("reveal")
+						nextPlayer = this.assignedPlayer.revealRole();
 					}
-				}
+					else if (userInput.equalsIgnoreCase("play")) {//JOUER UNE CARTE
+						Card cardToBePlayed=this.chooseCard(isAccused);
+						if (cardToBePlayed!=null) {//peut être null si on fait exit
+							nextPlayer = this.assignedPlayer.playCard(cardToBePlayed,true);
+						}
+					}
+					else if (userInput.equalsIgnoreCase("show hand")) {//REGARDER SA MAIN
+						System.out.println("Voici votre main");
+						this.assignedPlayer.getHand().showCardWithEffect();
+					}
+					else if (userInput.equalsIgnoreCase("show player")) {//REGARDER LES JOUEURS
+						System.out.println("Voici les joueurs");
+						PlayerGroup.getInstance(0).showPlayerKnownInfo(assignedPlayer);
+					}
+				}while(userInput.equalsIgnoreCase("show hand")|| userInput.equalsIgnoreCase("show player"));
 			}
 			else {//NE PAS ETRE ACCUSE
-				System.out.println("Voulez-vous accuser ou jouer une carte ?\nY pour l'accusation N pour la carte");
-				userInput = this.inScanner.nextLine();
-				if (userInput.equalsIgnoreCase("Y")) {//ACCUSER
-					
-					List<Player> accusablePlayers=playerGroup.getTarget("accusation",this.assignedPlayer);
-					Player accusedPlayer=this.chooseTarget(accusablePlayers,true);
-					if (accusedPlayer!=null) {
-						nextPlayer=assignedPlayer.accuse(assignedPlayer, accusedPlayer, true);
+				do {
+					this.userInput=UserInterface.getInstance().chooseBetween("Voulez-vous jouer une carte (play) ou accuser (accuse). (show hand/show player)", "play,accuse,show hand,show player", false);
+					if (this.userInput.equalsIgnoreCase("accuse")) {//ACCUSER
+						
+						List<Player> accusablePlayers=playerGroup.getTarget("accusation",this.assignedPlayer);
+						Player accusedPlayer=this.chooseTarget(accusablePlayers,true);
+						if (accusedPlayer!=null) {
+							nextPlayer=assignedPlayer.accuse(assignedPlayer, accusedPlayer, true);
+						}
+						
 					}
-					
-				}
-				else if (userInput.equalsIgnoreCase("N")) {//JOUER UNE CARTE
-					Card cardToBePlayed=this.chooseCard(isAccused);
-					if (cardToBePlayed!=null) {//peut être null si on fait exit
-						nextPlayer = this.assignedPlayer.playCard(cardToBePlayed,false);
+					else if (userInput.equalsIgnoreCase("play")) {//JOUER UNE CARTE
+						Card cardToBePlayed=this.chooseCard(isAccused);
+						if (cardToBePlayed!=null) {//peut être null si on fait exit
+							nextPlayer = this.assignedPlayer.playCard(cardToBePlayed,false);
+						}
 					}
-				}
+					else if (userInput.equalsIgnoreCase("show hand")) {//REGARDER SA MAIN
+						System.out.println("Voici votre main");
+						this.assignedPlayer.getHand().showCardWithEffect();
+					}
+					else if (userInput.equalsIgnoreCase("show player")) {//REGARDER LES JOUEURS
+						System.out.println("Voici les joueurs");
+						PlayerGroup.getInstance(0).showPlayerKnownInfo(assignedPlayer);
+					}
+				}while(userInput.equalsIgnoreCase("show hand")|| userInput.equalsIgnoreCase("show player"));
 			}
 		}while(nextPlayer==null);
 		return nextPlayer;
@@ -78,6 +95,14 @@ public class HumanPlayer implements Strategie{
 		
 		return choosenCard;
 	}
+	
+	public Card chooseCardToDiscard() {
+		Card choosenCard=null;
+		Hand cards = this.assignedPlayer.getHand();
+		userInput=UserInterface.getInstance().chooseBetween("\"Choisissez une carte à defausser", cards.toString(), false);
+		choosenCard=cards.getCardByName(userInput);
+		return choosenCard;
+	}
 
 	@Override
 	public Player chooseTarget(List<Player> targets) {//Surcharge si on ne précise pas si on peut sortir du choix, on met alors faux.
@@ -91,6 +116,14 @@ public class HumanPlayer implements Strategie{
 			return PlayerGroup.getInstance(0).getPlayerByName(userInput);
 		}
 		return null;
+	}
+	
+	public boolean chooseToReveal() {
+		String userInput = UserInterface.getInstance().chooseBetween(assignedPlayer.getName()+" : Voulez-vous reveler votre role (reveal) ou jouer une carte (play). (show hand/show player)", "reveal,play,show hand,show player", false);
+		if (userInput.contains("reveal")) {
+			return true;
+		}
+		else return false;
 	}
 	
 }

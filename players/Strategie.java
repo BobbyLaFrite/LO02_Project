@@ -7,6 +7,8 @@ public interface Strategie {
 	public NextPlayer play(boolean isAccused);
 	public void chooseRole();
 	public Card chooseCard(boolean isAccused);
+	public Card chooseCardToDiscard();
 	public Player chooseTarget(List<Player> targets);
+	public boolean chooseToReveal();
 	
 }

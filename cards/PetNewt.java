@@ -1,8 +1,5 @@
 package cards;
 import java.util.List;
-import java.util.ListIterator;
-
-import game.DiscardPile;
 import game.UserInterface;
 import players.NextPlayer;
 import players.Player;
@@ -34,7 +31,7 @@ public class PetNewt extends Card{
 		Player cardBelongsToPlayer = null;
 		List<Player> players = PlayerGroup.getInstance(0).getTarget("", actuPlayer);
 		for (Player player : players) {
-			contentBoards+=player.getBoard().toString();
+			contentBoards+=player.getBoard().toString()+",";
 		}
 		userInput = userInterface.chooseBetween("Pet Newt - Hunt :\nChoisissez la carte que vous voulez récupérer : ", contentBoards, false);
 		

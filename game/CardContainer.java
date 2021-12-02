@@ -44,7 +44,7 @@ public class CardContainer {
 		Card currentCard=null;
 		while (it.hasNext()) {//On continue tant que le nom ne correspond pas
 			currentCard=it.next();
-			if (currentCard.getName()==name) {
+			if (currentCard.getName().equalsIgnoreCase(name)) {
 				break;
 			}
 		}
@@ -86,7 +86,25 @@ public class CardContainer {
 		this.giveRandomCard(containerToGive,1);
 	}
 	
-	public String toString () { 	//Retourne un string sous forme [nomde carte 1, nom de carte 2 ... ]
+	public void showCardWithEffect() {
+		Card actuCard;
+		Iterator<Card> it = this.cardList.iterator(); //on cree un iterateur pour parcourir toute les cartes
+		 while(it.hasNext()) { 
+			 actuCard= it.next();
+			 System.out.println("\u007c"+"=".repeat(20));
+			 System.out.println("\u007c"+"\t"+actuCard.getName());
+			 System.out.println("\u007c"+"~".repeat(20));
+			 System.out.println("\u007c"+"\tWitch");
+			 System.out.println("\u007c"+actuCard.getWitchEffect().replace("\n", "\n\u007c"));
+			 System.out.println("\u007c"+"~".repeat(20));
+			 System.out.println("\u007c"+"\tHunt");
+			 System.out.println("\u007c"+actuCard.getHuntEffect().replace("\n", "\n\u007c"));
+			 System.out.println("\u007c"+"=".repeat(20));
+			 System.out.println("\n");
+		 }
+	}
+	
+	public String toString () { 	//Retourne un string sous forme nomde carte 1, nom de carte 2 ... 
 		String content = ""; 		//content correspond au string qu'on retourne � la fin. On lui ajoute tout les nomsde carte
 		Iterator<Card> it = this.cardList.iterator(); //on cr�e un iterateur pour parcourir toute les cartes
 		 while(it.hasNext()) { 

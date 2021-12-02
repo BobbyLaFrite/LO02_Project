@@ -1,4 +1,6 @@
 package cards;
+import java.util.List;
+
 import players.NextPlayer;
 import players.Player;
 import players.PlayerGroup;
@@ -26,8 +28,23 @@ public class AngryMob extends Card{
 	}
 	
 	public NextPlayer activateHunt(Player actuPlayer){ 
+		//on ne peut pas cibler un joueur avec broomstick de révélé
+		List<Player> players = PlayerGroup.getInstance(0).getTarget("", actuPlayer);
+		Player untargetablePlayer = null;
+		for (Player player : players) {
+			if (player.getBoard().toString().contains("Broomstick")) {
+				untargetablePlayer = player;
+				break;
+			}
+		}
+		
 		Player target;
-		target = super.chooseTarget("accusation",actuPlayer);
+		if (untargetablePlayer!=null) {
+			target = super.chooseTarget("accusation",actuPlayer,untargetablePlayer);
+		}
+		else {
+			target = super.chooseTarget("accusation",actuPlayer);
+		}
 		target.revealRole();
 		if (target.getRole().getRole()=="Witch") {
 			actuPlayer.addScore(2);

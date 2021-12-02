@@ -41,11 +41,19 @@ public class Accuser implements Strategie {
 		//joue toujours la première
 		return assignedPlayer.getHand().getPlayableCard(this.assignedPlayer,isAccused).getCardByIndex(0);
 	}
+	
+	public Card chooseCardToDiscard() {
+		return assignedPlayer.getHand().getCardByIndex(0);
+	}
 
 	@Override
 	public Player chooseTarget(List<Player> targets) {
 		// TODO Auto-generated method stub
 		return targets.get(0);
+	}
+	@Override
+	public boolean chooseToReveal() {//non utile 
+		return true;
 	}
 
 }

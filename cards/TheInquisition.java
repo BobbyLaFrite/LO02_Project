@@ -23,14 +23,16 @@ public class TheInquisition extends Card{
 	}
 	
 	public NextPlayer activateWitch(Player actuPlayer){ 
-		if (!actuPlayer.getHand().isEmpty()) {//VERIFIER QUE L'ON NE PEUT PAS CHOISIR LA CARTE ELLE MEME
- 			userInput=userInterface.chooseBetween("The Inquisition - Witch :Choisissez une carte à défausser :", actuPlayer.getHand().toString(), false);
- 			Card choosenCard=actuPlayer.getHand().getCardByName(userInput);
+		if (!actuPlayer.getHand().isEmpty() && actuPlayer.getHand().getNumberCard()!=1) {
+
+			userInput=userInterface.chooseBetween("The Inquisition - Witch :Choisissez une carte a defausser :", actuPlayer.getHand().toString(), false);
+	 		Card choosenCard=actuPlayer.getHand().getCardByName(userInput);
 			actuPlayer.getBoard().addCard(choosenCard);
 			actuPlayer.getHand().removeCard(choosenCard);
+ 			
 		}
 		else {
-			System.out.println("The Inquisition - Witch :\nVous n'avez pas de carte à défausser !");
+			System.out.println("The Inquisition - Witch :\nVous n'avez pas de carte de a defausser !");
 		}
 		System.out.println("The Inquisition - Witch : Vous prenez le prochain tour");
 		return new NextPlayer(actuPlayer,false); 
@@ -40,7 +42,9 @@ public class TheInquisition extends Card{
 		System.out.println("The Inquisition - Hunt :\nChoisissez le prochain joueur");
 		Player target;
 		target = super.chooseTarget("alive",actuPlayer);
-		//Afficher secrètement l'identitéd
+		if (actuPlayer.getStrategieAsString().equalsIgnoreCase("HumanPlayer")) {
+			System.out.println("L'identite du joueur est "+target.getRole().getRole());
+		}
 		return new NextPlayer(target, false);
 	}
 	

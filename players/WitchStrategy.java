@@ -58,7 +58,16 @@ public class WitchStrategy implements Strategie {
 		//play card randomly
 		CardContainer playableCard=assignedPlayer.getHand().getPlayableCard(assignedPlayer, isAccused);
 		int handSize = playableCard.getNumberCard();
-		return playableCard.getCardByIndex(randomNumber.nextInt(handSize));
+		if (handSize>1) {
+			return playableCard.getCardByIndex(randomNumber.nextInt(handSize));
+		}else {
+			return playableCard.getCardByIndex(0);
+		}
+		
+	}
+	
+	public Card chooseCardToDiscard() {
+		return assignedPlayer.getHand().getCardByIndex(0);
 	}
 
 	@Override
@@ -66,6 +75,15 @@ public class WitchStrategy implements Strategie {
 		// TODO Auto-generated method stub
 		//inutile je crois sauf pour la start humain
 		return null;
+	}
+	
+	public boolean chooseToReveal() {
+		if (assignedPlayer.getHand().getPlayableCard(assignedPlayer, true).isEmpty()) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 }

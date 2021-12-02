@@ -1,5 +1,6 @@
 package game;
 
+import java.util.LinkedHashSet;
 import java.util.ListIterator;
 import cards.*;
 import players.Player;
@@ -21,12 +22,22 @@ public class Deck extends CardContainer{
 		return instance;
 	}
 	
-	public void init() { //##a changer quand les cartes seront faites## 
-		for (int i = 0; i < 4; i++) { 
-			 this.addCard(new AngryMob()); //##on remplit le deck d'une meme carte pour l'instant
-			 this.addCard(new Toad());
-			 this.addCard(new HoockedNose());
-		 }
+	public void init() { 
+		this.cardList =  new LinkedHashSet<Card>();
+		this.addCard(new AngryMob()); 
+		this.addCard(new Toad());
+		this.addCard(new HoockedNose());
+		this.addCard(new BlackHat());
+		this.addCard(new Broomstick());
+		this.addCard(new Cauldron());
+		this.addCard(new PetNewt());
+		this.addCard(new TheInquisition());
+			 
+		this.addCard(new Toad());
+		this.addCard(new Toad());
+		this.addCard(new Toad());
+		this.addCard(new Toad());
+		
 	}
 	
 	

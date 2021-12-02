@@ -22,11 +22,12 @@ public abstract class Card {
 	}
 	
 	
-	protected Player chooseTarget(String typeOfTarget,Player actuPlayer) { //##classe ~test (comportera bcp de modifs) notamment on peut choisir tout les joueurs et seulement par nom
+	protected Player chooseTarget(String typeOfTarget,Player... actuPlayer) { //##classe ~test (comportera bcp de modifs) notamment on peut choisir tout les joueurs et seulement par nom
+		//on envoie en paramètres en 0 : le joueur actuel, et à la suite les joueurs à ignorer
 		Player target = null;
 		List<Player> validTarget = PlayerGroup.getInstance(0).getTarget(typeOfTarget, actuPlayer);
-		target=actuPlayer.getStrategie().chooseTarget(validTarget);
-		System.out.println("Entre "+PlayerGroup.getInstance(0).playerListToString(validTarget)+", "+actuPlayer.getName()+" a choisi "+target.getName());
+		target=actuPlayer[0].getStrategie().chooseTarget(validTarget);
+		System.out.println("Entre "+PlayerGroup.getInstance(0).playerListToString(validTarget)+", "+actuPlayer[0].getName()+" a choisi "+target.getName());
 		return target;
 		
 	}
@@ -54,6 +55,14 @@ public abstract class Card {
 	public NextPlayer takeTurn(Player actuPlayer) {
 		System.out.println(actuPlayer.getName()+" prenez le tour !");
 		return new NextPlayer(actuPlayer,false);
+	}
+	
+	public String getWitchEffect() {
+		return this.witchEffect;
+	}
+	
+	public String getHuntEffect() {
+		return this.huntEffect;
 	}
 	
 	//Affiche le nom de la carte ainsi que la partie de l'effet choisi.

@@ -10,7 +10,6 @@ public class PlayerGroup {
 	private List<Player> playerList;
 	private int numberPlayer;
 	private static PlayerGroup instance;
-	//private List<Player> exceptionsAccusationList; ##Pas utile je pense car on va pas actualiser la liste � chaque fois donc pas d'attributs##
 	private List<Player> exceptionCardTarget;
 	private Player currentPlayer=null;
 	private Player previousPlayer=null;
@@ -135,7 +134,7 @@ public class PlayerGroup {
 	//}
 
 	public List<Player> getTarget(String typeOfTarget,Player... exceptions) {
-		List<Player> targets = playerList;
+		List<Player> targets = new ArrayList<Player>(this.playerList);
 		for (Player exception : exceptions) {
 			targets.remove(exception);
 		}
@@ -164,6 +163,33 @@ public class PlayerGroup {
 		return content;
 	}
 
+	public void showPlayerKnownInfo(Player askingPlayer) {
+		Player currentPlayer;
+		ListIterator<Player> playerIT = this.getIterator();
+		String role;
+		System.out.format("%15s%10s%7s", "Nom", "\u007c  Role", "\u007cCarte\u007c");
+		while (playerIT.hasNext()) {
+			System.out.println("\n");
+			role="?????";
+			currentPlayer=playerIT.next();
+			if (currentPlayer==askingPlayer) {
+				role=askingPlayer.getRole().getRole();
+				if (!askingPlayer.getRole().getIsRevealed()) {
+					role="?"+role+"?";
+				}else {
+					role="!"+role+"!";
+				}
+				System.out.format("%15s%10s%10s", currentPlayer.getName(), "\u007c "+role  , "\u007c "+currentPlayer.getHand().getNumberCard()+" \u007c");
+			}else {
+				if (currentPlayer.getRole().getIsRevealed()) {
+					role="!"+currentPlayer.getRole().getRole()+"!";
+				}
+				System.out.format("%15s%10s%10s",currentPlayer.getName(), "\u007c "+role  , "\u007c "+currentPlayer.getHand().getNumberCard()+" \u007c");
+
+			}
+		}
+		System.out.println("\n");
+	}
 	
 	public String toString () { 
 		String content = "PlayerGroup : nombre de joueurs = "+String.valueOf(this.getNumberPlayer())+"\n";

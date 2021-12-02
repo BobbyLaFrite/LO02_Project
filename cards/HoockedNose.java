@@ -1,7 +1,6 @@
 package cards;
 import java.util.Random;
 
-import game.Game;
 import players.NextPlayer;
 import players.Player;
 import players.PlayerGroup;

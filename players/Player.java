@@ -32,7 +32,9 @@ public class Player {
 	}
 	
 	public void addScore(int val) {
-		this.score+=val;
+		if ((this.score+val)>=0) {//on empêche d'aller dans des valeurs négatives
+			this.score+=val;
+		}
 	}
 	
 	public String getName() {
@@ -88,9 +90,9 @@ public class Player {
 	public String toString () { 	//Retourne un string sous forme "nom du joueur, role, status, nombre de carde dans la main 
 		String content = this.name;
 		content+=",\t\trole : " + this.role.getRole();
-		content+=",\t\test rï¿½vï¿½lï¿½ : " + String.valueOf(this.role.getIsRevealed());
+		content+=",\t\test r\u00e9v\u00e9l\u00e9 : " + String.valueOf(this.role.getIsRevealed());
 		content+=",\t\tnombre de carte : " + String.valueOf(this.hand.getNumberCard());
-		content+=",\t\tstratï¿½gie : "+this.getStrategieAsString(); 
+		content+=",\t\tstrat\u00e9gie : "+this.getStrategieAsString(); 
 		return content;
 	}
 	
@@ -103,8 +105,8 @@ public class Player {
 		//rï¿½vï¿½ler son role permet de connaitre le prochain joueur 
 		//donc changement de signature
 		//A IMPLEMENTER
-		System.out.println(this.getName()+" s'est rï¿½vï¿½lï¿½ !");
-		System.out.println("Il ï¿½tait : "+role.getRole());
+		System.out.println(this.getName()+" s'est revele !");
+		System.out.println("Il etait : "+role.getRole());
 		this.role.reveal();
 		if (this.role.getRole().equalsIgnoreCase("Villager")) {
 			return new NextPlayer(this, false);

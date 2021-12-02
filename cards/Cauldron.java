@@ -1,8 +1,5 @@
 package cards;
-import java.util.Iterator;
-import java.util.ListIterator;
 
-import game.CardContainer;
 import game.DiscardPile;
 import players.NextPlayer;
 import players.Player;
@@ -24,7 +21,7 @@ public class Cauldron extends Card{
 	public NextPlayer activateWitch(Player actuPlayer){ 
 		Player prePlayer = PlayerGroup.getInstance(0).getPreviousPlayer();
 		if (!prePlayer.getHand().isEmpty()) {
-			System.out.println("Le joueur qui vous a accusé n'a pas de carte en main !");
+			System.out.println("Le joueur qui vous a accus\u00e9 n'a pas de carte en main !");
 		}
 		else {
 			prePlayer.getHand().giveRandomCard(DiscardPile.getInstance());
@@ -37,7 +34,7 @@ public class Cauldron extends Card{
 	public NextPlayer activateHunt(Player actuPlayer){ 
 		actuPlayer.revealRole();
 		if (actuPlayer.getRole().getRole().equalsIgnoreCase("Witch")) {
-			System.out.println("Cauldron - Hunt :\n Le joueur à votre gauche prend le tour !");
+			System.out.println("Cauldron - Hunt :\n Le joueur a�votre gauche prend le tour !");
 			int nextPlayerIndex = PlayerGroup.getInstance(0).getIndex(actuPlayer)-1;
 			if (nextPlayerIndex<=0) {
 				return new NextPlayer(PlayerGroup.getInstance(0).getPlayer(nextPlayerIndex), false);

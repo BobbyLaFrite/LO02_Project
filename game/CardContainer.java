@@ -5,7 +5,7 @@ import cards.Card;
 
 
 
-public abstract class CardContainer {
+public class CardContainer {
 	
 	protected LinkedHashSet<Card> cardList;
 	
@@ -27,15 +27,25 @@ public abstract class CardContainer {
 		
 		this.cardList.clear();
 	}
-	
-	public abstract void init();
-	
-	public Card getCardByIndex(int index) {//parcourt le linkedhashset pour renvoyer le nième élément
+		
+	public Card getCardByIndex(int index) {//parcourt le linkedhashset pour renvoyer le niÃ¨me Ã©lÃ©ment
 		Iterator<Card> it = cardList.iterator();
 		Card currentCard=null;
 		for (int i = 0;i<index+1;i++) {
 			if (it.hasNext()) {
 				currentCard=it.next();
+			}
+		}
+		return currentCard;
+	}
+	
+	public Card getCardByName(String name) {
+		Iterator<Card> it = cardList.iterator();
+		Card currentCard=null;
+		while (it.hasNext()) {//On continue tant que le nom ne correspond pas
+			currentCard=it.next();
+			if (currentCard.getName().equalsIgnoreCase(name)) {
+				break;
 			}
 		}
 		return currentCard;
@@ -49,13 +59,13 @@ public abstract class CardContainer {
 		this.cardList.remove(cardToRemove);
 	}
 	
-	public void removeCard(int indexCardToRemove) {//surcharge avec seulement l'index comme reference
+	public void removeCard(int indexCardToRemove) {//surcharge avec seulement l'index comme rï¿½fï¿½rence
 		this.removeCard(this.getCardByIndex(indexCardToRemove));
 	}
 	
 	
-	public void giveCard(Card cardToGive ,CardContainer containerToGive) { //fonction qui supprime une carte pour l'ajouter a un autre container. 
-			//##Aucune securite, si carte existe pas##
+	public void giveCard(Card cardToGive ,CardContainer containerToGive) { //fonction qui supprime une carte pour l'ajouter ï¿½ un autre container. 
+			//##Aucune sï¿½curitï¿½, si carte existe pas##
 		this.removeCard(cardToGive);
 		containerToGive.addCard(cardToGive);
 	}
@@ -65,27 +75,44 @@ public abstract class CardContainer {
 		this.giveCard(this.getCardByIndex(indexCardToGive) , containerToGive);
 	}
 	
-	public void giveRandomCard(CardContainer containerToGive,int cardNumber) { // donner des cartes aleatoirement, utile pour la distribution notament
+	public void giveRandomCard(CardContainer containerToGive,int cardNumber) { // donner des cartes alï¿½atoirement, utile pour la distribution notament
 		 for (int i = 0; i < cardNumber; i++) { 
 			 int index = (int)(Math.random() * this.cardList.size());
 			 this.giveCard(index, containerToGive);
 		 	} 
 	}
 	
-	public void giveRandomCard(CardContainer containerToGive) { //surcharge de la methode si on veut donner qu'une carte
+	public void giveRandomCard(CardContainer containerToGive) { //surcharge de la mï¿½thode si on veut donner qu'une carte
 		this.giveRandomCard(containerToGive,1);
 	}
 	
-	public String toString () { 	//Retourne un string sous forme [nomde carte 1, nom de carte 2 ... ]
-		String content = "["; 		//content correspond au string qu'on retourne a la fin. On lui ajoute tout les nomsde carte
-		Iterator<Card> it = cardList.iterator(); //on cree un iterateur pour parcourir toute les cartes
-		 while(it.hasNext()) {  
-			  if (it.hasNext()) {
-				  content+= it.next().getName() ;
-				  content+=" , ";
+	public void showCardWithEffect() {
+		Card actuCard;
+		Iterator<Card> it = this.cardList.iterator(); //on cree un iterateur pour parcourir toute les cartes
+		 while(it.hasNext()) { 
+			 actuCard= it.next();
+			 System.out.println("\u007c"+"=".repeat(20));
+			 System.out.println("\u007c"+"\t"+actuCard.getName());
+			 System.out.println("\u007c"+"~".repeat(20));
+			 System.out.println("\u007c"+"\tWitch");
+			 System.out.println("\u007c"+actuCard.getWitchEffect().replace("\n", "\n\u007c"));
+			 System.out.println("\u007c"+"~".repeat(20));
+			 System.out.println("\u007c"+"\tHunt");
+			 System.out.println("\u007c"+actuCard.getHuntEffect().replace("\n", "\n\u007c"));
+			 System.out.println("\u007c"+"=".repeat(20));
+			 System.out.println("\n");
+		 }
+	}
+	
+	public String toString () { 	//Retourne un string sous forme nomde carte 1, nom de carte 2 ... 
+		String content = ""; 		//content correspond au string qu'on retourne ï¿½ la fin. On lui ajoute tout les nomsde carte
+		Iterator<Card> it = this.cardList.iterator(); //on crï¿½e un iterateur pour parcourir toute les cartes
+		 while(it.hasNext()) { 
+			 content+= it.next().getName() ;
+			  if (it.hasNext()) {  
+				  content+=",";
 			  }
 		 }
-		 content+="]";
 		 return content;
 	}
 	

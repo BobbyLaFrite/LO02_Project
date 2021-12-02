@@ -1,18 +1,20 @@
 package players;
 
-import java.util.Scanner;
-import java.util.ListIterator;
+
 import java.util.Random;
+
+import cards.Card;
 import game.Board;
 import game.Role;
 
 public class Player {
 	private Hand hand;
 	private Board board;
-	protected PlayerGroup playerGroup;
+	int playerIndex;
 	private Role role;
 	private String name;
-	boolean controlable; //##temporaire##
+	private Strategie strategie;
+	private int score;
 
 	static int nbrJoueur = 0; 					//## temporaire, pour nommer les joueurs##
 	
@@ -22,15 +24,23 @@ public class Player {
 		this.hand=new Hand();
 		this.board=new Board();
 		this.role = new Role();
-		this.controlable=false; 				//## temporaire, sert a  differencier les joueurs des ia##
+		this.score=0;
 	}
 	
-	public void setControlable(boolean controlable) {
-		this.controlable = controlable;
+	public int getScore() {
+		return this.score;
+	}
+	
+	public void addScore(int val) {
+		this.score+=val;
 	}
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name=name;
 	}
 	
 	public Hand getHand() {
@@ -41,63 +51,87 @@ public class Player {
 		return this.board;
 	}
 	
-	public void chooseRole() {
-		
-		if (this.controlable) {
-			Scanner scanner = new Scanner(System.in);
-			String userInput;
-			
-			System.out.println("Chose your role Witch/Villager");
-			userInput = scanner.nextLine(); 
-			this.role.setRole(userInput);
-		} else {
-			this.role.setRole((String) (new Random().nextBoolean() ? "Witch" : "Villager"));
-			
-		}
-		
+	public Role getRole() {
+		return this.role;
 	}
 	
+	public Strategie getStrategie() {
+		return this.strategie;
+	}
+	
+	public boolean getIsAlive() {
+		if (!this.getRole().getIsRevealed()||this.getRole().getRole().equalsIgnoreCase("Villager")){
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public String getStrategieAsString() {
+		return this.strategie.getClass().getSimpleName();
+	}
+	
+	public void setStrategieHuman() {
+		this.strategie = new HumanPlayer(this);//Voir comment choisir la strategie
+	}
+	
+	public void setStrategieRandom() {
+		Random rand = new Random();
+		switch (rand.nextInt(2)) { //Switch pour choisir une stratï¿½gie alï¿½atoirement
+        	case 0: this.strategie = new WitchStrategy(this); break;
+        	case 1: this.strategie = new Accuser(this); break;
+		}
+	}
+	
+	
+	
 	public String toString () { 	//Retourne un string sous forme "nom du joueur, role, status, nombre de carde dans la main 
-		String content = this.name + " , role : " + this.role.getRole() + " , est révélé : " + String.valueOf(this.role.getIsRevealed()) + " , nombre de carte : " + String.valueOf(this.hand.getNumberCard()); 		
+		String content = this.name;
+		content+=",\t\trole : " + this.role.getRole();
+		content+=",\t\test r\u00e9v\u00e9l\u00e9 : " + String.valueOf(this.role.getIsRevealed());
+		content+=",\t\tnombre de carte : " + String.valueOf(this.hand.getNumberCard());
+		content+=",\t\tstrat\u00e9gie : "+this.getStrategieAsString(); 
 		return content;
 	}
 	
-	public NextPlayer play() { //Temporaire aussi, à inclure dans les comportements après. Ici on fait juste choisir et jouer une carte
-		
-		Scanner scanner = new Scanner(System.in);
-		String userInput=null;
-		int intValue;
-		boolean validEntry=false;
-		NextPlayer cible=null;
-		
-		System.out.println("C'est à toi de jouer "+this.name +"\n Voici les cartes dans ta main :\n"+this.hand+"\n Choisir une carte (nom/index) ou lancez une accusation (-1 / \"accuse\")+nom du joueur");
-
-		do {
-			if (userInput !=null) { //s'active seulement la deuxième fois qu'on va dans la boucle et donc que l'entrée est erronée
-				System.out.println("Carte ou joueur non trouvée");
-
-			}
-			userInput = scanner.nextLine();
-			try {  									//Très moche, si le prof voit ça il nous tue mais c'est une solution tempraire pour séparer les réponses int des strings
-			    intValue = Integer.parseInt(userInput);
-			    if (intValue < this.hand.getNumberCard()) {
-			    	cible=this.hand.getCardByIndex(intValue).activate();
-			    	validEntry=true;
-			    }
-			} catch (NumberFormatException e) { //Et du coup la partie String ici
-				userInput.replace("accuse ", "");
-				cible =new NextPlayer(this.playerGroup.getPlayerByName(userInput),false);
-				
-				
-			}
-		} while (validEntry==false);
-		
-		
-		
-		return cible;
+	public NextPlayer play(boolean isAccused) {
+		//A IMPLEMENTER
+		return this.strategie.play(isAccused);
 	}
+	
+	public NextPlayer revealRole(){
+		//rï¿½vï¿½ler son role permet de connaitre le prochain joueur 
+		//donc changement de signature
+		//A IMPLEMENTER
+		System.out.println(this.getName()+" s'est r\u00e9v\u00e9l\u00e9 !");
+		System.out.println("Il \u00e9tait : "+role.getRole());
+		this.role.reveal();
+		if (this.role.getRole().equalsIgnoreCase("Villager")) {
+			return new NextPlayer(this, false);
+		}
+		else {
+			return new NextPlayer(PlayerGroup.getInstance(0).getPreviousPlayer(), false);//on doit rï¿½cupï¿½rer l'accusateur
+			
+		}
 
+	}
+	
+	public NextPlayer playCard(Card card,boolean isAccused) {
+		NextPlayer nextPlayer = null;
+		nextPlayer=card.activate(this,isAccused);
+		//On dï¿½place la carte aprï¿½s qu'elle a ï¿½tï¿½ jouï¿½e
+		if (this.hand.toString().contains(card.getName())) {//si la carte n'a pas Ã©tÃ© dÃ©placÃ©e parun autre effet
+			this.hand.giveCard(card, this.board);
+		}
+		
 
+		return nextPlayer;
+	}
+	
+	public NextPlayer accuse(Player accuser,Player accusedPlayer,boolean isAccused) {
+			System.out.println(accuser.getName()+" accuse "+accusedPlayer.getName()+"\n");
+		return new NextPlayer(accusedPlayer, isAccused);
+	}
 
 
 	
